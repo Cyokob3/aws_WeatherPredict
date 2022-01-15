@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split
 
 def train():
 
-    f = open ("WeatherInfo.csv", encoding="CP932")
+    f = open ("weatherInfo.csv", encoding="CP932")
 
     data = pd.read_csv(f)
 
