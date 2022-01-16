@@ -11,15 +11,18 @@ import pandas as pd
 import numpy as np
 import pickle
 import sys
+import warnings
 
 from sklearn.linear_model import LogisticRegression as LR
 from sklearn.model_selection import train_test_split
 
 
+warnings.resetwarnings()
+warnings.simplefilter('ignore', UserWarning)
 
 def train():
 
-    f = open ("weatherInfo.csv", encoding="CP932")
+    f = open ("気象データ.csv", encoding="CP932")
 
     data = pd.read_csv(f)
 
@@ -43,21 +46,16 @@ def train():
     clf.predict(X_test)
     clf.score(X_test, y_test)
 
-def decode():
+def decode(temperature, humidity, atmospheric_pressure):
 
 
     with open('model.pickle', mode='rb') as f:
       clf = pickle.load(f)
 
 
-    #ここに天気情報を入力してください
-    #weather = [[11.35, 1009.73, 53.74]]
-    temperature = 11.35 #温度情報入力
-    humidity = 1009.73 #湿度情報入力
-    atmospheric_pressure = 53.74 #気圧情報入力
 
-    weather = [[temperature, atmospheric_pressure, humidity]]
-
+    weather = [[float(temperature), float(atmospheric_pressure), float(humidity)]]  
+    
     ans = clf.predict(weather)
 
     print(ans)
@@ -66,7 +64,10 @@ def decode():
 if __name__ == "__main__":
 
   args = sys.argv
-  if args[1] == 'train':
-    train()
+  if len(args) > 2:
+    if args[1] == 'train':
+      train()
+    else:
+      decode(args[1], args[2], args[3])
   else:
-    decode()
+    print('Arguments are too short')
